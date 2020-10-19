@@ -78,7 +78,7 @@ def watch_directory(path, magic_string, extension, interval):
     file_ls = os.listdir(path)
     for key in list(global_dict):
         if key not in file_ls:
-            logger.info(f"File Deleted: {key}")
+            logger.info(f'File Deleted: {key}')
             global_dict.pop(key)
     for file_name in file_ls:
         if file_name not in global_dict and extension in file_name:
@@ -93,7 +93,7 @@ def watch_directory(path, magic_string, extension, interval):
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description="Looking for changing files in directory.")
+        description='Looking for changing files in directory.')
 
     parser.add_argument(
         '-e', '--ext', help='extension input')
