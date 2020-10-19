@@ -4,6 +4,7 @@ Dirwatcher - A long-running program
 """
 
 __author__ = '''Tracy Dewitt,
+Manuel Valasco,
 https://docs.python.org/3/library/logging.html,
 https://youtu.be/-ARI4Cz-awo,
 https://youtu.be/jxmzY9soFXg,
@@ -55,18 +56,20 @@ logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
 
 
-def search_for_magic(filename, start_line, magic_string, path):
-
-    with open(f'{path} {filename}') as f:
-        for n, s in enumerate(f):
-            if s.find(magic_string) != -1:
-                print(f'{filename}/{n}')
+def search_for_magic(filename, start_line, magic_string):
+    with open(filename) as f:
+        for line_num, line_string in enumerate(f):
+            if line_string.find(magic_string) != -1:
+                print(filename, line_num)
 
     return
 
 
 def watch_directory(path, magic_string, extension, interval):
-    # Your code here
+    file_ls = os.listdir(path)
+    for file_name in file_ls:
+        search_for_magic(path + '/' + file_name, 0, magic_string)
+
     return
 
 
@@ -86,7 +89,8 @@ def create_parser():
 
     parser.add_argument(
         '-t', '--txt', help='magic search')
-    return
+
+    return parser
 
 
 def signal_handler(sig_num, frame):
@@ -97,12 +101,11 @@ def signal_handler(sig_num, frame):
     :param frame: Not used
     :return None
     """
-    global exit_flag
     # log the associated signal name
-        logger.warn('Received ' + signal.Signals(sig_num).name)
+    global exit_flag
+    if signal.Signals(sig_num).name == 'SIGINT':
+        logger.warning('Received ' + signal.Signals(sig_num).name)
     exit_flag = True
-
-
 
 
 def main(args):
@@ -115,6 +118,7 @@ def main(args):
     while not exit_flag:
         try:
             # call my directory watching function
+            # watch_directory()
             pass
         except Exception as e:
             # This is an UNHANDLED exception
