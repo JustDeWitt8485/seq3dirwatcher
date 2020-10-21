@@ -95,18 +95,16 @@ def create_parser():
     parser = argparse.ArgumentParser(
         description='Looking for changing files in directory.')
 
-    parser.add_argument(
-        '-e', '--ext', help='extension input')
+    parser.add_argument('directory', help='directory to parse')
+
+    parser.add_argument('txt', help='file type looking for ')
 
     parser.add_argument(
-        '-d', '--dir', help='directory input')
+        '-e', '--ext', default='.txt', help='extension input')
 
     parser.add_argument(
         '-i', '--int', default=1, help='polling interval period of time\
                         between the end of the timeout period')
-
-    parser.add_argument(
-        '-t', '--txt', help='magic search')
 
     return parser
 
@@ -123,8 +121,7 @@ def signal_handler(sig_num, frame):
     """
     global exit_flag
     # log the associated signal name
-    if signal.Signals(sig_num).name == 'SIGINT':
-        logger.warning('Received ' + signal.Signals(sig_num).name)
+    logger.warning('Received ' + signal.Signals(sig_num).name)
     exit_flag = True
 
 
@@ -151,7 +148,7 @@ def main(args):
     while not exit_flag:
         try:
             # call my directory watching function
-            watch_directory(ns.dir, ns.txt, ns.ext, ns.int)
+            watch_directory(ns.directory, ns.txt, ns.ext, ns.int)
             time.sleep(ns.int)
             pass
         except Exception as e:
